@@ -5,10 +5,17 @@ public class InputPlayerManager : MonoBehaviour
 {
     public static InputPlayerManager instance;
     PlayerActions playerActions;
-    [SerializeField] Vector2 movementInput;
+
+    [Header("Player Movement input")]
+    [SerializeField] Vector2 movementInput;    
     public float horizontalInput;
     public float verticalInput;
     public float moveAmount;
+
+    [Header("Camera movement input")]
+    [SerializeField] Vector2 cameraInput;
+    public float cameraHorizontalInput;
+    public float cameraVerticalInput;
 
     private void Awake()
     {
@@ -55,6 +62,7 @@ public class InputPlayerManager : MonoBehaviour
             playerActions = new PlayerActions();
 
             playerActions.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
+            playerActions.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
         }
         playerActions.Enable();
     }
@@ -83,10 +91,11 @@ public class InputPlayerManager : MonoBehaviour
 
     private void Update()
     {
-        HandleMovementInput();
+        HandlePlayerMovementInput();
+        HandleCameraMovementInput();
     }
 
-    private void HandleMovementInput() 
+    private void HandlePlayerMovementInput() 
     {
         verticalInput = movementInput.y; 
         horizontalInput = movementInput.x;
@@ -103,5 +112,11 @@ public class InputPlayerManager : MonoBehaviour
         {
             moveAmount = 1;
         }
+    }
+
+    private void HandleCameraMovementInput() 
+    {
+        cameraVerticalInput = cameraInput.y;
+        cameraHorizontalInput = cameraInput.x; 
     }
 }
